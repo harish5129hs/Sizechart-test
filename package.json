@@ -1,0 +1,14 @@
+{
+	"name":"backchodi",
+	"dependencies": {
+	"express": "4.12.3",
+	"body-parser":"1.17.1",
+	"http-status": "0.1.8",
+	"underscore": "1.5.2",
+	"papaparse":"4.3.2",
+	"babyparse":"0.4.6"
+	},
+	"scripts":{
+		"start":"node server.js"
+	}
+}

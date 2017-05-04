@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Testing</title>
+
+	<link rel="stylesheet" href="./materialize/css/materialize.min.css">
+	<link rel="stylesheet" href="./font-awesome/css/font-awesome.css">
+	<link rel="stylesheet" href="./styles/myStyle.css">
+
+  
+          
+</head>
+<body>
+	<div class="content ">
+		<div class="navbar-fixed ">
+		    <nav class="grey darken-4">
+		      <div class="nav-wrapper">
+		        <a href="#!" class="brand-logo center">Size chart Uploader</a>
+		      </div>
+		    </nav>
+		</div>
+	
+		<div class="container ">
+				<br><br><br><br>
+			    <form >
+			      <div class="row">
+			        <div class="input-field col s12">
+			          <i class="fa fa-bar-chart prefix" aria-hidden="true"></i>
+			          <textarea id="sizeChartInput" class="materialize-textarea"></textarea>
+			          <label for="sizeChartInput">Csv file</label>
+			        </div>
+			      </div>
+			      <br>
+			      <input type="checkbox" id="headingCB" checked="checked" />
+	      		  <label for="headingCB">Use first row as heading.</label>
+	      		  <br><br>
+			      <input type="checkbox" id="updateCB" />
+	      		  <label for="updateCB">Check to update exsisting sizechart.</label>
+	      		  <br><br><br><br>
+	      		  <div class="row">
+		      		  <div class="input-field col s6">
+				          <input placeholder="Enter path for sf-common" id="sfPath" type="text" class="validate">
+				          <label for="sfPath">Path for sf-common</label>
+				       </div>
+				   </div>
+				   <br><br>    
+	      		  <p class="center">
+	      		  	<a class="waves-effect waves-light btn" id="submitCSVBtn">Validate and Submit</a>
+	      		  </p>	
+			    </form>
+		</div>
+	</div>
+
+
+
+
+	<!-- modal popups begin  -->
+	<div id="validateModal" class="modal">
+	    <div class="modal-content">
+		    <div class="loader-div center">
+		    	<br><br><br><br>
+		    	<i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
+				<span class="sr-only">Loading...</span>
+		    </div>
+	      	<div class="popup-content center">
+	      		<h5 class="blue-text text-darken-4">Size Chart to be uploaded</h5>
+	      		<br>
+	      		<div class="tableDiv">
+
+	      		</div>
+	      		<div class="btns-group">
+	      			<div class="row center">
+	      				<div class="col s4"></div>
+	      				<div class="col s2">
+	      					<a class="waves-effect waves-light btn green darken-4">Submit</a>
+	      				</div>
+	      				<div class="col s2">
+	      					<a class="waves-effect waves-light btn red darken-4" id="cancel-submission">Cancel</a>
+	      				</div>
+	      				<div class="col s4"></div>
+	      			</div>
+	      		</div>
+
+	      	</div>
+	    </div>
+	</div>
+
+
+
+
+
+	<!-- Compiled and minified JavaScript -->
+	<script src="./scripts/jquery-3.2.1.min.js"></script>
+	<script src="./materialize/js/materialize.min.js"></script>
+	<script src="./scripts/app.js" type="text/javascript" charset="utf-8" async defer></script>
+</body>
+</html>
