@@ -2,7 +2,7 @@
 	width: 93%;
 	border-radius:5px; 
 	max-height: 87%;
-	zoom:95%;
+	zoom:90%;
 	background: white;
 }
 
@@ -36,10 +36,18 @@ td{
 	max-height: 550px;
 	border: #b2ebf2  1px solid;
 	border-radius: 5px;
-	zoom:80%;
+	zoom:85%;
 }
 
 .no-margin{
 	margin: 0px;
+}
+
+.margin-10{
+	margin-right: 10px;
+	margin-left: 10px;
+}
+.tabs{
+	overflow-x: hidden;
 }
 

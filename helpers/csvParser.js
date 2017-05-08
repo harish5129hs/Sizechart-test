@@ -1,5 +1,6 @@
 var BabyParse = require("papaparse"),
 	sizeChartFields = require("../constants.js").sizeChartFields,
+	requiredSizeChartFields = require("../constants.js").requiredSizeChartFields,
 	_ = require("underscore");
 	errorCheckingInParsedCSV = require("./errorCheckCsv.js").errorCheckingInParsedCSV,
 	checkErrorInStructuredCSV = require("./errorCheckCsv.js").checkErrorInStructuredCSV,
@@ -35,6 +36,7 @@ function parseCSVInStructuredData(parsedCSV){
 	}
 	parsedCSV.structuredSizeChartData = structuredSizeChartData;
 	parsedCSV.sizeChartFields = sizeChartFields;
+	parsedCSV.requiredSizeChartFields = requiredSizeChartFields;
 	return parsedCSV;
 
 }
@@ -70,8 +72,8 @@ function addParsedErrors(parsedCSV){
 		}
 	}
 
-	for(i=0;i<parsedCSV.errors;i++){
-		errorMSG  = "On Row "+parsedCSV.errors[i].row+" : "+parsedCSV.errors[i].message;
+	for(i=0;i<parsedCSV.errors.length;i++){
+		errorMSG  = "On Row "+(parsedCSV.errors[i].row+1)+" : "+parsedCSV.errors[i].message;
 		parsedCSV.parseErrors.push(errorMSG);
 	}
 
