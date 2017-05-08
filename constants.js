@@ -3,9 +3,11 @@ var requiredSizeChartFields = ["Brand","Sub-vendor","ProductType","Size","Show-I
 var permittedValues = {
 	"Show-In-Anchor-Brands":["YES","NO"],
 	"Carry-Inventory":["YES","NO"],
-	"popular-brand":["TRUE","FALSE"];
-}
+	"popular-brand":["TRUE","FALSE"]
+};
 
 module.exports={
-	sizeChartFields:sizeChartFields
-}
+	sizeChartFields:sizeChartFields,
+	requiredSizeChartFields:requiredSizeChartFields,
+	permittedValues:permittedValues
+};

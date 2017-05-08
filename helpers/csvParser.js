@@ -1,25 +1,19 @@
-var PapaParse = require("papaparse"),
+var BabyParse = require("papaparse"),
 	sizeChartFields = require("../constants.js").sizeChartFields,
-	requiredSizeChartFields  =require("../constants.js").requiredSizeChartFields,
 	_ = require("underscore");
+	errorCheckingInParsedCSV = require("./errorCheckCsv.js").errorCheckingInParsedCSV,
+	checkErrorInStructuredCSV = require("./errorCheckCsv.js").checkErrorInStructuredCSV,
+	checkIfThereIsUnmatchedFields = require("./errorCheckCsv.js").checkIfThereIsUnmatchedFields;
 
 
 function parseCSVString(csvString,headingRowFlag){
-	return PapaParse.parse(csvString,{
-		header : headingRowFlag,
-		delimiter : ","
-	});
+	var config ={
+		delimiter : ",",
+		header : headingRowFlag
+	};
+	return BabyParse.parse(csvString,config);
 }
 
-function errorCheckingInParsedCSV(parsedCSV){
-	//checking if fields are 36
-	if(parsedCSV.meta.fields.length!==sizeChartFields.length){
-		parsedCSV.errorMSG = "Unable to  parse the CSV file ,  please verify.";
-		parsedCSV.fieldsNotParsed=true;
-		parsedCSV.isValid = false;
-	}
-	return parsedCSV;
-}
 
 function parseCSVInStructuredData(parsedCSV){
 	var structuredSizeChartData=[],i,j,
@@ -30,35 +24,61 @@ function parseCSVInStructuredData(parsedCSV){
 		sizeObj={};
 		sizeData = parsedCSV.data[i];
 		for(j=0;j<fieldsArray.length;j++){
-			var field  =fieldsArray[j];
+			field  =fieldsArray[j];
 			sizeObj[field] ={
 				value :sizeData[field] ? sizeData[field]:"",
 				isEmpty : sizeData[field] ? false :true,
 				error : false
-			}
+			};
 		}
 		structuredSizeChartData.push(sizeObj);
 	}
 	parsedCSV.structuredSizeChartData = structuredSizeChartData;
+	parsedCSV.sizeChartFields = sizeChartFields;
 	return parsedCSV;
 
 }
 
-function checkErrorInStructuredCSV(parsedCSV){
 
-}
 
 function validateSizeChartCSV(parsedCSV){
-	parsedCSV = errorCheckingInParsedCSV(parsedCSV);
+	errorCheckingInParsedCSV(parsedCSV);
 	if(parsedCSV.fieldsNotParsed===true){
 		return parsedCSV;
 	}
-	parsedCSV = parseCSVInStructuredData(parsedCSV);
+	parseCSVInStructuredData(parsedCSV);
+	checkErrorInStructuredCSV(parsedCSV);
+	checkIfThereIsUnmatchedFields(parsedCSV);
+	parsedCSV.parseErrors=[];
+	addParsedErrors(parsedCSV);
 	return parsedCSV;
 
+}
+
+//add errors to response , so it can be shown alongside
+function addParsedErrors(parsedCSV){
+	var i , sizeData,errorMSG;
+	for(i=0;i<parsedCSV.structuredSizeChartData.length;i++){
+		sizeData = parsedCSV.structuredSizeChartData[i];
+		for(field in sizeData){
+			if(sizeData.hasOwnProperty(field)){
+				if(sizeData[field].error){
+					errorMSG  = "On Row "+(i+1)+" : "+sizeData[field].errorCause;
+					parsedCSV.parseErrors.push(errorMSG);
+				}
+			}
+		}
+	}
+
+	for(i=0;i<parsedCSV.errors;i++){
+		errorMSG  = "On Row "+parsedCSV.errors[i].row+" : "+parsedCSV.errors[i].message;
+		parsedCSV.parseErrors.push(errorMSG);
+	}
+
+	return parsedCSV;
 }
 
 module.exports = {
 	parseCSVString:parseCSVString,
 	validateSizeChartCSV:validateSizeChartCSV
-}
+};

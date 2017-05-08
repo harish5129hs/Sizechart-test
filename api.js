@@ -8,4 +8,4 @@ module.exports = function(){
 	router.post('/validateCSV.json',validateApiHandler);
 
 	return router;
-}
+};

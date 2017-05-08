@@ -10,4 +10,4 @@ module.exports = function(req,res){
 
 	res.json(csvParser.validateSizeChartCSV(parsedCSV));
 
-}
+};

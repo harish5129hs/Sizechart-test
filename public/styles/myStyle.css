@@ -1,7 +1,45 @@
-.modal{
-	width: 70%;
+.myModal{
+	width: 93%;
 	border-radius:5px; 
+	max-height: 87%;
+	zoom:95%;
+	background: white;
 }
 
 #sizeChartInput{
+	font-size: 85%;
 }
+
+td{
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+.btns-group{
+	margin-left: 4%;
+	margin-right: 4%;
+}
+
+.required{
+	background: #e0e0e0;
+}
+
+.error{
+	background: #ff5252!important;
+}
+
+
+
+.tableDiv{
+	overflow-x:scroll;
+	overflow-y:auto;
+	max-height: 550px;
+	border: #b2ebf2  1px solid;
+	border-radius: 5px;
+	zoom:80%;
+}
+
+.no-margin{
+	margin: 0px;
+}
+

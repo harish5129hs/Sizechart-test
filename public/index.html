@@ -31,7 +31,7 @@
 			        </div>
 			      </div>
 			      <br>
-			      <input type="checkbox" id="headingCB" checked="checked" />
+			      <input type="checkbox" id="headingCB" checked="checked" disabled="disabled" >
 	      		  <label for="headingCB">Use first row as heading.</label>
 	      		  <br><br>
 			      <input type="checkbox" id="updateCB" />
@@ -49,41 +49,100 @@
 	      		  </p>	
 			    </form>
 		</div>
+
+		<br><br><br><br>
 	</div>
 
 
 
 
 	<!-- modal popups begin  -->
-	<div id="validateModal" class="modal">
-	    <div class="modal-content">
+	<div id="validateModal" class="modal myModal">
+	    <div class="modal-content no-padding">
 		    <div class="loader-div center">
 		    	<br><br><br><br>
 		    	<i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
 				<span class="sr-only">Loading...</span>
+				<br><br><br><br>
 		    </div>
-	      	<div class="popup-content center">
-	      		<h5 class="blue-text text-darken-4">Size Chart to be uploaded</h5>
-	      		<br>
-	      		<div class="tableDiv">
+	      	<div class="popup-content center no-margin no-padding">
 
-	      		</div>
-	      		<div class="btns-group">
-	      			<div class="row center">
-	      				<div class="col s4"></div>
-	      				<div class="col s2">
-	      					<a class="waves-effect waves-light btn green darken-4">Submit</a>
-	      				</div>
-	      				<div class="col s2">
-	      					<a class="waves-effect waves-light btn red darken-4" id="cancel-submission">Cancel</a>
-	      				</div>
-	      				<div class="col s4"></div>
-	      			</div>
-	      		</div>
+	      		<!-- tabs start -->
+	      		<div class="row">
+				    <div class="col s12">
+				      <ul class="tabs">
+				        <li class="tab col s5"><a class = "active" href="#sizechartdiv">SizeChart</a></li>
+				        <li class="tab col s5"><a href="#errordiv">Errors</a></li>
+				      </ul>
+				    </div>
+				    <!-- Tab sizechart div  -->
+				    <div id="sizechartdiv" class="col s12">
+				    	<br>
+				    	<h5 class="blue-text text-darken-4">Size Chart to be uploaded</h5>
+      					<br>
+				    	<div class="errorMSG red-text left-align">* There are some errors in size Chart</div>
+			      		<br>
+			      		<div class="tableDiv">
+
+			      		</div>
+			      		<br><br><br>
+			      		<div class="btns-group">
+			      			<div class="row center">
+			      				<div class="col s4"></div>
+			      				<div class="col s2">
+			      					<a class="waves-effect waves-light btn green darken-4">Submit</a>
+			      				</div>
+			      				<div class="col s2">
+			      					<a class="waves-effect waves-light btn red darken-4" id="cancel-submission">Cancel</a>
+			      				</div>
+			      				<div class="col s4"></div>
+			      			</div>
+			      		</div>
+				    </div>
+
+				    <div id="errordiv left" class="col s12">
+				    	<br><br>
+				    	<h4 class="red-text text-darken-4">Error</h4>
+				    	<ul class="collection red-text text-darken-4" id="errorsList">
+				    		<li class="collection-item black">Errors are:</li>
+
+					    </ul>
+				    </div>
+				 </div>
+				 <!-- tabs end -->
+		      		
 
 	      	</div>
 	    </div>
 	</div>
+
+
+	<!-- modal for invalid csv msg -->
+	<div id="invalidCSVMsg" class="modal">
+	    <div class="modal-content">
+	      <h5 class='red-text text-darken-2'>Unable to parse the csv file.</h5>
+	      <p>
+	      	SizeChart not in correct format.<br>
+	      	Please verify the csv file.
+	      </p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+	    </div>
+ 	</div>
+
+ 	<!-- modal for invalid csv msg -->
+	<div id="apiErrorMsg" class="modal">
+	    <div class="modal-content">
+	      <h5 class='red-text text-darken-2'>There was problem in connection.</h5>
+	      <p>
+	      	Please try again later.
+	      </p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+	    </div>
+ 	</div>
 
 
 
