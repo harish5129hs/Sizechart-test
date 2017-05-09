@@ -10,6 +10,7 @@ logic for client side
 		sfPath:"",
 		updateCSVFlag:false,
 		headingRowFlag:false,
+		userEmail:"",
 		JQUERY_SELECTORS:{
 			submitBtn:'#submitCSVBtn',
 			sfPathInput:'#sfPath',
@@ -23,9 +24,60 @@ logic for client side
 			popupDiv:'.popup-content',
 			invalidCSV:'#invalidCSVMsg',
 			apiErrorMsg:'#apiErrorMsg',
-			errorsList:"#errorsList"
+			errorsList:"#errorsList",
+			uploadSizeChartBtn:"#postSizeChart-Btn"
 		}
 	};
+
+	//function to render html
+	app.getTableRenderHtml = function(response){
+		var i,j,field,
+			html="<table class= 'bordered responsive-table centered'>"+
+        			'<thead>'+
+        				'<tr>';
+			html += '<th>S No.</th>'
+		for(i=0;i<response.sizeChartFields.length;i++){
+			html +=('<th id="th-'+response.sizeChartFields[i]+'">'+response.sizeChartFields[i]+'</th>');
+		}
+		html +="</tr></thead><tbody>";
+		for(i=0;i<response.structuredSizeChartData.length;i++){
+			html +="<tr id='main-row-"+i+"''>";
+			html += ("<td>"+(i+1)+"</td>");
+			for(j=0;j<response.sizeChartFields.length;j++){
+				field=response.sizeChartFields[j];
+				html +="<td class='";
+				html +=	(response.structuredSizeChartData[i][field].required? "required ": "");
+				html +=	(response.structuredSizeChartData[i][field].error?("error tooltipped ' data-position='top' data-delay='50' data-tooltip='"+response.structuredSizeChartData[i][field].errorCause+"'"):" ' ");
+				html += ">"+response.structuredSizeChartData[i][field].value+"</td>";
+			}
+			html +="</tr>";
+		}
+		html += "</tbody></table>";
+		return html;
+	}
+
+
+	//show parsed csv in modal popup
+	app.showCSVInTable=function(response){
+		var html= app.getTableRenderHtml(response);
+
+		$(app.JQUERY_SELECTORS.loader).fadeOut("fast",function(){
+			$(app.JQUERY_SELECTORS.popupDiv).fadeIn("fast",function(){
+				$('ul.tabs').tabs();
+			});
+		});
+		$('.errorMSG').hide();
+		$(app.JQUERY_SELECTORS.uploadSizeChartBtn).removeClass('disabled');
+		if(response.isValid===false){
+			$('.errorMSG').show();
+			$(app.JQUERY_SELECTORS.uploadSizeChartBtn).addClass('disabled');
+		}
+		$(app.JQUERY_SELECTORS.tableDiv).html(html);
+		$('.tooltipped').tooltip();
+		app.highlightRequiredHeadings(response.requiredSizeChartFields);
+
+
+	}
 
 	//function to handle api errors
 	app.apiErrorHandler = function(){
@@ -65,12 +117,15 @@ logic for client side
 
 	}
 
+
+	//helper function to highlight table heading required fields row
 	app.highlightRequiredHeadings = function(requiredSizeChartFields){
 		var i=0;
 		for(i=0;i<requiredSizeChartFields.length;i++){
 			$('#th-'+requiredSizeChartFields[i]).addClass('required');
 		}
 	}
+
 
 	//function to handle validate api response
 	app.validateApiResponseHandler = function(response){
@@ -87,7 +142,7 @@ logic for client side
 
 		}else if(response.statusCode===2){
 			//unmatched fields in csv
-			app.isValid = response.isValid;
+			app.isValid = false;
 			app.showCSVInTable(response);
 			app.highlightMismatchErrors(response);
 			app.pushErrorsToList(response);
@@ -96,7 +151,7 @@ logic for client side
 
 
 
-	//functions for validating sizechart
+	//functions for validating sizechart to make api call
 	app.validateSizeChart = function(csvDataString,headingRowFlag){
 		var apiUrl="/api/v1/validateCSV.json",
 		data={
@@ -117,70 +172,61 @@ logic for client side
 		});
 	}
 
+	//function called on validate btn click
 	app.submitCSVForValidation = function(){
 		console.log('hello');
 		var csvString,
 			headingRowFlag ;
-		csvString = $(app.JQUERY_SELECTORS.sizeChartInput).val();
+		app.csvString  = csvString = $(app.JQUERY_SELECTORS.sizeChartInput).val();
 		app.sfPath  = $(app.JQUERY_SELECTORS.sfPath).val();
 		app.updateCSVFlag = $(app.JQUERY_SELECTORS.updateCheckBox).is(":checked");
 		app.headingRowFlag = headingRowFlag = $(app.JQUERY_SELECTORS.headingCheckBox).is(":checked");
 
 		app.validateSizeChart(csvString,headingRowFlag); 
-		
+
 		$(app.JQUERY_SELECTORS.validateModal).modal('open');
 		$(app.JQUERY_SELECTORS.loader).show();
 	}
 
+	//function called on cancel btn click
 	app.cancelSubmitCSVHandler = function(){
 		$(app.JQUERY_SELECTORS.validateModal).modal('close');
 		$(app.JQUERY_SELECTORS.tableDiv).html('');
 		app.isValid = false;
 	}
 
-
-
-
-	//show parsed csv in modal popup
-	app.showCSVInTable=function(response){
-		var i,j,
-			field,
-			html="<table class= 'bordered responsive-table centered'>"+
-        			'<thead>'+
-        				'<tr>';
-			html += '<th>S No.</th>'
-		for(i=0;i<response.sizeChartFields.length;i++){
-			html +=('<th id="th-'+response.sizeChartFields[i]+'">'+response.sizeChartFields[i]+'</th>');
+	//function to handle update api response
+	app.updateApiResponseHandler = function(response){
+		if(response.statusCode===0){
+			//successful 
 		}
-		html +="</tr></thead><tbody>";
-		for(i=0;i<response.structuredSizeChartData.length;i++){
-			html +="<tr id='main-row-"+i+"''>";
-			html += ("<td>"+(i+1)+"</td>");
-			for(j=0;j<response.sizeChartFields.length;j++){
-				field=response.sizeChartFields[j];
-				html +="<td class='";
-				html +=	(response.structuredSizeChartData[i][field].required? "required ": "");
-				html +=	(response.structuredSizeChartData[i][field].error?("error tooltipped ' data-position='top' data-delay='50' data-tooltip='"+response.structuredSizeChartData[i][field].errorCause+"'"):" ' ");
-				html += ">"+response.structuredSizeChartData[i][field].value+"</td>";
+		else if(response.statusCode===1){
+			//failed
+			
+		}
+	} 
+
+	//function called on submit btn click
+	app.uploadSizeChart = function(){
+		var apiUrl="/api/v1/uploadCSV.json",
+		data={
+			csvString :app.csvString,
+			headingRowFlag:app.headingRowFlag,
+			updateCSVFlag:app.updateCSVFlag,
+			userEmail:app.userEmail
+		};
+		$.ajax({
+			url:apiUrl,
+			data:data,
+			method:"POST",
+			success:function(response){
+				console.log(response);
+				app.updateApiResponseHandler(response);
+			},
+			error:function(){
+				app.apiErrorHandler();
 			}
-			html +="</tr>";
-		}
-		html += "</tbody></table>";
-
-		$(app.JQUERY_SELECTORS.loader).fadeOut("fast",function(){
-			$(app.JQUERY_SELECTORS.popupDiv).fadeIn("fast",function(){
-				$('ul.tabs').tabs();
-			});
 		});
-		$('.errorMSG').hide();
-		if(response.isValid===false){
-			$('.errorMSG').show();
-		}
-		$(app.JQUERY_SELECTORS.tableDiv).html(html);
-		$('.tooltipped').tooltip();
-		app.highlightRequiredHeadings(response.requiredSizeChartFields);
-
-
 	}
 
 
@@ -190,6 +236,7 @@ logic for client side
 			dismissible: false
 		});
 		$(app.JQUERY_SELECTORS.submitBtn).on('click',app.submitCSVForValidation);
+		$(app.JQUERY_SELECTORS.uploadSizeChartBtn).on('click',app.uploadSizeChart);
 		$(app.JQUERY_SELECTORS.cancelSubmit).on('click',app.cancelSubmitCSVHandler);
 		$(app.JQUERY_SELECTORS.popupDiv).hide();
 		$('.errorMSG').hide();

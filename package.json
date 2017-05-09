@@ -9,6 +9,7 @@
 	"babyparse":"0.4.6"
 	},
 	"scripts":{
-		"start":"node server.js"
+		"start":"node server.js",
+		"debug-app":"node-debug -p 5129 server.js"
 	}
 }

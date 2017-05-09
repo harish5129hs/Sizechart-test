@@ -35,8 +35,6 @@ function parseCSVInStructuredData(parsedCSV){
 		structuredSizeChartData.push(sizeObj);
 	}
 	parsedCSV.structuredSizeChartData = structuredSizeChartData;
-	parsedCSV.sizeChartFields = sizeChartFields;
-	parsedCSV.requiredSizeChartFields = requiredSizeChartFields;
 	return parsedCSV;
 
 }
@@ -53,6 +51,8 @@ function validateSizeChartCSV(parsedCSV){
 	checkIfThereIsUnmatchedFields(parsedCSV);
 	parsedCSV.parseErrors=[];
 	addParsedErrors(parsedCSV);
+	parsedCSV.sizeChartFields = sizeChartFields;
+	parsedCSV.requiredSizeChartFields = requiredSizeChartFields;
 	return parsedCSV;
 
 }
