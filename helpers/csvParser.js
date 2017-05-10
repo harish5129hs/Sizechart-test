@@ -42,6 +42,7 @@ function parseCSVInStructuredData(parsedCSV){
 
 
 function validateSizeChartCSV(parsedCSV){
+	console.log("validating csv");
 	errorCheckingInParsedCSV(parsedCSV);
 	if(parsedCSV.fieldsNotParsed===true){
 		return parsedCSV;

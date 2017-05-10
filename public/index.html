@@ -36,11 +36,17 @@
 	      		  <br><br>
 			      <input type="checkbox" id="updateCB" />
 	      		  <label for="updateCB">Check to update exsisting sizechart.</label>
-	      		  <br><br><br><br>
+	      		  <br><br><br>
 	      		  <div class="row">
 		      		  <div class="input-field col s6">
 				          <input placeholder="Enter path for sf-common" id="sfPath" type="text" class="validate">
 				          <label for="sfPath">Path for sf-common</label>
+				       </div>
+				   </div>
+				   <div class="row">
+		      		  <div class="input-field col s6">
+				          <input placeholder="Enter your email id " id="userEmail" type="text" class="validate">
+				          <label for="userEmail">Your email</label>
 				       </div>
 				   </div>
 				   <br><br>    
@@ -122,6 +128,7 @@
 	    <div class="modal-content">
 	      <h5 class='red-text text-darken-2'>Unable to parse the csv file.</h5>
 	      <p>
+	      	<br>
 	      	SizeChart not in correct format.<br>
 	      	Please verify the csv file.
 	      </p>
@@ -136,7 +143,22 @@
 	    <div class="modal-content">
 	      <h5 class='red-text text-darken-2'>There was problem in connection.</h5>
 	      <p>
+	      	<br>
 	      	Please try again later.
+	      </p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+	    </div>
+ 	</div>
+
+ 	<!-- modal for invalid csv msg -->
+	<div id="upload-success" class="modal">
+	    <div class="modal-content">
+	      <h5 class='green-text text-darken-2'>Size chart uploaded succesfully.</h5>
+	      <p>
+	      	<br>
+	      	Please check your email for deployment job status.
 	      </p>
 	    </div>
 	    <div class="modal-footer">

@@ -14,6 +14,7 @@ logic for client side
 		JQUERY_SELECTORS:{
 			submitBtn:'#submitCSVBtn',
 			sfPathInput:'#sfPath',
+			userEmail:'#userEmail',
 			sizeChartInput:'#sizeChartInput',
 			updateCheckBox:'#updateCB',
 			validateModal:'#validateModal',
@@ -25,7 +26,8 @@ logic for client side
 			invalidCSV:'#invalidCSVMsg',
 			apiErrorMsg:'#apiErrorMsg',
 			errorsList:"#errorsList",
-			uploadSizeChartBtn:"#postSizeChart-Btn"
+			uploadSizeChartBtn:"#postSizeChart-Btn",
+			uploadSuccessMOdal:'#upload-success'
 		}
 	};
 
@@ -83,7 +85,7 @@ logic for client side
 	app.apiErrorHandler = function(){
 		//show error popup
 		$(app.JQUERY_SELECTORS.validateModal).modal('close');
-		$(app.JQUERY_SELECTORS.apiErrorMsg).modal('close');
+		$(app.JQUERY_SELECTORS.apiErrorMsg).modal('open');
 	}
 
 	//function to highlight error rows
@@ -181,6 +183,7 @@ logic for client side
 		app.sfPath  = $(app.JQUERY_SELECTORS.sfPath).val();
 		app.updateCSVFlag = $(app.JQUERY_SELECTORS.updateCheckBox).is(":checked");
 		app.headingRowFlag = headingRowFlag = $(app.JQUERY_SELECTORS.headingCheckBox).is(":checked");
+		app.userEmail = $(app.JQUERY_SELECTORS.userEmail).val();
 
 		app.validateSizeChart(csvString,headingRowFlag); 
 
@@ -197,14 +200,27 @@ logic for client side
 
 	//function to handle update api response
 	app.updateApiResponseHandler = function(response){
-		if(response.statusCode===0){
+		if(response.statusCode===1){
 			//successful 
+			$(app.JQUERY_SELECTORS.validateModal).modal('close');
+			$(app.JQUERY_SELECTORS.uploadSuccessMOdal).modal('open');
+			app.resetInputFields();
 		}
-		else if(response.statusCode===1){
+		else if(response.statusCode===0){
 			//failed
-			
+			$(app.JQUERY_SELECTORS.validateModal).modal('close');
+			$(app.JQUERY_SELECTORS.invalidCSV).modal('open');
 		}
 	} 
+
+
+	app.resetInputFields = function(){
+		$(app.JQUERY_SELECTORS.sizeChartInput).val('');
+		$(app.JQUERY_SELECTORS.sfPathInput).val('');
+		$(app.JQUERY_SELECTORS.userEmail).val('');
+		$(app.JQUERY_SELECTORS.updateCheckBox).prop('checked', false);
+
+	}
 
 	//function called on submit btn click
 	app.uploadSizeChart = function(){
