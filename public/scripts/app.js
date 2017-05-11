@@ -160,6 +160,10 @@ logic for client side
 			csvString :csvDataString,
 			headingRowFlag:headingRowFlag
 		};
+
+		$(app.JQUERY_SELECTORS.validateModal).modal('open');
+		$(app.JQUERY_SELECTORS.loader).show();
+
 		$.ajax({
 			url:apiUrl,
 			data:data,
@@ -174,32 +178,67 @@ logic for client side
 		});
 	}
 
+	//function to handle update api response
+	app.updateApiResponseHandler  = function(response){
+
+	}
+
+	//function called to update Size Chart to update existing sizechart
+	app.updateSizeChart  = function(csvString,headingRowFlag,updateCSVFlag){
+	var apiUrl="/api/v1/updateSizeChart.json",
+		data={
+			csvString :csvString,
+			headingRowFlag:headingRowFlag,
+			updateCSVFlag:updateCSVFlag
+		};
+
+		$(app.JQUERY_SELECTORS.validateModal).modal('open');
+		$(app.JQUERY_SELECTORS.loader).show();
+
+		$.ajax({
+			url:apiUrl,
+			data:data,
+			method:"POST",
+			success:function(response){
+				console.log(response);
+				app.updateApiResponseHandler(response);
+			},
+			error:function(){
+				app.apiErrorHandler();
+			}
+		});
+	}
+
 	//function called on validate btn click
 	app.submitCSVForValidation = function(){
 		console.log('hello');
 		var csvString,
-			headingRowFlag ;
+			headingRowFlag,
+			updateCSVFlag ;
 		app.csvString  = csvString = $(app.JQUERY_SELECTORS.sizeChartInput).val();
 		app.sfPath  = $(app.JQUERY_SELECTORS.sfPath).val();
-		app.updateCSVFlag = $(app.JQUERY_SELECTORS.updateCheckBox).is(":checked");
+		updateCSVFlag = app.updateCSVFlag = $(app.JQUERY_SELECTORS.updateCheckBox).is(":checked");
 		app.headingRowFlag = headingRowFlag = $(app.JQUERY_SELECTORS.headingCheckBox).is(":checked");
 		app.userEmail = $(app.JQUERY_SELECTORS.userEmail).val();
 
-		app.validateSizeChart(csvString,headingRowFlag); 
-
-		$(app.JQUERY_SELECTORS.validateModal).modal('open');
-		$(app.JQUERY_SELECTORS.loader).show();
+		if(updateCSVFlag===true){
+			app.updateSizeChart(csvString,headingRowFlag,updateCSVFlag);
+		}
+		else{
+			app.validateSizeChart(csvString,headingRowFlag); 
+		}
 	}
 
 	//function called on cancel btn click
 	app.cancelSubmitCSVHandler = function(){
 		$(app.JQUERY_SELECTORS.validateModal).modal('close');
 		$(app.JQUERY_SELECTORS.tableDiv).html('');
+		$(app.JQUERY_SELECTORS.popupDiv).hide();
 		app.isValid = false;
 	}
 
 	//function to handle update api response
-	app.updateApiResponseHandler = function(response){
+	app.uploadApiResponseHandler = function(response){
 		if(response.statusCode===1){
 			//successful 
 			$(app.JQUERY_SELECTORS.validateModal).modal('close');
@@ -216,9 +255,11 @@ logic for client side
 
 	app.resetInputFields = function(){
 		$(app.JQUERY_SELECTORS.sizeChartInput).val('');
+		$(app.JQUERY_SELECTORS.sizeChartInput).trigger('autoresize');
 		$(app.JQUERY_SELECTORS.sfPathInput).val('');
 		$(app.JQUERY_SELECTORS.userEmail).val('');
 		$(app.JQUERY_SELECTORS.updateCheckBox).prop('checked', false);
+		$(app.JQUERY_SELECTORS.popupDiv).hide('');
 
 	}
 
@@ -237,7 +278,7 @@ logic for client side
 			method:"POST",
 			success:function(response){
 				console.log(response);
-				app.updateApiResponseHandler(response);
+				app.uploadApiResponseHandler(response);
 			},
 			error:function(){
 				app.apiErrorHandler();

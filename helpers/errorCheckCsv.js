@@ -25,7 +25,7 @@ function checkValuesAreCorrect(sizeData){
 		if(permittedValues.hasOwnProperty(field)){
 			if(sizeData[field].error!==true&&(_.contains(permittedValues[field],sizeData[field].value)===false)){
 				sizeData[field].error = true;
-				sizeData[field].errorCause = "Permitted value for"+field+" are "+permittedValues[field].join("/"); 
+				sizeData[field].errorCause = "Permitted value for "+field+" are "+permittedValues[field].join("/"); 
 			}
 		}
 	}

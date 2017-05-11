@@ -17,7 +17,16 @@ module.exports = function(req,res){
 	}
 	else{
 		console.log("Valid csv , uploading it.");
-		uploadSizeChart(csvString,headingRowFlag,updateCSVFlag,userEmail,sfPath,res);
+		uploadSizeChart(csvString,updateCSVFlag,userEmail,sfPath).then(function(){
+			res.json({statusCode:1,message:"Size chart uploaded successfully." });
+		}).catch(function(err){
+			console.log(err);
+			res.json({
+				statusCode:2,
+				message:"Failed to upload sizechart." ,
+				error:err
+			});
+		});
 	}
 
 };
