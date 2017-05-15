@@ -14,7 +14,7 @@ function getBrandsFromParsedData(parsedCSV){
 }
 
 function addExistingSizeChartInformation(parsedCSV){
-	
+
 	var filePath = path.join(__dirname,"../testing/sizecharts_v3.csv");
 		brands = getBrandsFromParsedData(parsedCSV);
 
@@ -24,12 +24,13 @@ function addExistingSizeChartInformation(parsedCSV){
 		fsp.fsReadFile(filePath).then(function(data){
 
 			parsedCSV.existingSizeChart = updateCSVParser.appendExistingUpdateInformation(data,brands);
+			parsedCSV.updt_statusCode=1;
 			resolve(parsedCSV);	
 
 		}).catch(function(err){
 
 			console.log(err);
-			parsedCSV.statusCode = 1;
+			parsedCSV.updt_statusCode = 2;
 			parsedCSV.fileErrorMsg = "Failed to read sizechart file from directory";
 			resolve(parsedCSV);
 

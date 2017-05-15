@@ -10,7 +10,7 @@ module.exports = function(req,res){
 	console.log('User requested updateSizeChart.json api with heading flag ->'+headingRowFlag);	
 	parsedCSV = csvParser.parseCSVString(csvString,headingRowFlag);
 	csvParser.validateSizeChartCSV(parsedCSV);
-	if(parsedCSV.statusCode===0){
+	if(parsedCSV.updt_statusCode===0){
 		//invalid csv , unable to parse
 		res.json(parsedCSV);
 	}else{

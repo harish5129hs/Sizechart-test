@@ -16,8 +16,8 @@ td{
 }
 
 .btns-group{
-	margin-left: 4%;
-	margin-right: 4%;
+	margin-left: 10%;
+	margin-right: 10%;
 }
 
 .required{
@@ -33,10 +33,19 @@ td{
 .tableDiv{
 	overflow-x:scroll;
 	overflow-y:auto;
-	max-height: 550px;
+	max-height: 450px;
 	border: #b2ebf2  1px solid;
 	border-radius: 5px;
-	zoom:85%;
+	zoom:80%;
+}
+
+.updateTable-div{
+	overflow-x:scroll;
+	overflow-y:auto;
+	max-height: 450px;
+	border: #b2ebf2  1px solid;
+	border-radius: 5px;
+	zoom:80%;
 }
 
 .no-margin{

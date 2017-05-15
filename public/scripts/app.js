@@ -27,23 +27,29 @@ logic for client side
 			apiErrorMsg:'#apiErrorMsg',
 			errorsList:"#errorsList",
 			uploadSizeChartBtn:"#postSizeChart-Btn",
-			uploadSuccessMOdal:'#upload-success'
+			uploadSuccessMOdal:'#upload-success',
+			updateSizeChartDiv:'#updateSizeChart-div',
+			updateTableDiv:".updateTable-div"
 		}
 	};
 
+	app.removeSpaces = function(string){
+		return string.replace(/[ ]/gi,'-');
+	};
+
 	//function to render html
-	app.getTableRenderHtml = function(response){
+	app.getTableRenderHtml = function(response,updateTableHtmlFlag){
 		var i,j,field,
 			html="<table class= 'bordered responsive-table centered'>"+
         			'<thead>'+
         				'<tr>';
 			html += '<th>S No.</th>'
 		for(i=0;i<response.sizeChartFields.length;i++){
-			html +=('<th id="th-'+response.sizeChartFields[i]+'">'+response.sizeChartFields[i]+'</th>');
+			html +=('<th class="th-'+app.removeSpaces(response.sizeChartFields[i])+'">'+response.sizeChartFields[i]+'</th>');
 		}
 		html +="</tr></thead><tbody>";
 		for(i=0;i<response.structuredSizeChartData.length;i++){
-			html +="<tr id='main-row-"+i+"''>";
+			html += (!updateTableHtmlFlag?("<tr id='main-row-"+i+"''>"):"<tr>");
 			html += ("<td>"+(i+1)+"</td>");
 			for(j=0;j<response.sizeChartFields.length;j++){
 				field=response.sizeChartFields[j];
@@ -78,7 +84,19 @@ logic for client side
 		$('.tooltipped').tooltip();
 		app.highlightRequiredHeadings(response.requiredSizeChartFields);
 
+		$(app.JQUERY_SELECTORS.updateSizeChartDiv).hide();
 
+	}
+
+	app.addExistingSizeChartTable  = function(response){
+		var html;
+		response.existingSizeChart.sizeChartFields = response.sizeChartFields;
+		html = app.getTableRenderHtml(response.existingSizeChart);
+
+		$(app.JQUERY_SELECTORS.updateSizeChartDiv).show();
+		$(app.JQUERY_SELECTORS.updateTableDiv).html(html);
+
+		app.highlightRequiredHeadings(response.requiredSizeChartFields);
 	}
 
 	//function to handle api errors
@@ -124,7 +142,7 @@ logic for client side
 	app.highlightRequiredHeadings = function(requiredSizeChartFields){
 		var i=0;
 		for(i=0;i<requiredSizeChartFields.length;i++){
-			$('#th-'+requiredSizeChartFields[i]).addClass('required');
+			$('.th-'+requiredSizeChartFields[i]).addClass('required');
 		}
 	}
 
@@ -180,7 +198,44 @@ logic for client side
 
 	//function to handle update api response
 	app.updateApiResponseHandler  = function(response){
+		if(response.updt_statusCode===0){
+			//invalid csv
+			$(app.JQUERY_SELECTORS.validateModal).modal('close');
+			$(app.JQUERY_SELECTORS.invalidCSV).modal('open');
+		}else if(response.updt_statusCode===2){
+			//unable to fetch existing size chart details
+			response.isValid =false;//so user can't upload it
+			if(response.statusCode===1){
+			//valid csv but may conatains errors
+				app.showCSVInTable(response);
+				app.pushErrorsToList(response);
 
+			}else if(response.statusCode===2){
+				//unmatched fields in csv
+				app.showCSVInTable(response);
+				app.highlightMismatchErrors(response);
+				app.pushErrorsToList(response);
+			}
+			$(app.JQUERY_SELECTORS.updateTableDiv).html('<p class="red-text">Unable to fetch existing size chart details <br> Please try again.</p>');
+
+		}else if(response.updt_statusCode===1){
+			 if(response.statusCode===1){
+			//valid csv but may conatains errors
+
+				app.isValid=response.isValid;
+				app.showCSVInTable(response);
+				app.addExistingSizeChartTable(response);
+				app.pushErrorsToList(response);
+
+			}else if(response.statusCode===2){
+				//unmatched fields in csv
+				app.isValid = false;
+				app.showCSVInTable(response);
+				app.addExistingSizeChartTable(response);
+				app.highlightMismatchErrors(response);
+				app.pushErrorsToList(response);
+			}
+		}
 	}
 
 	//function called to update Size Chart to update existing sizechart

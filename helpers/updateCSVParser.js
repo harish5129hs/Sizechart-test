@@ -1,5 +1,6 @@
 var _  = require('underscore'),
-	csvParser = require('./csvParser.js');
+	csvParser = require('./csvParser.js'),
+	checkErrorInStructuredCSV = require("./errorCheckCsv.js").checkErrorInStructuredCSV;
 
 function getBrandSpecificSizeChartData(parsedSizeChart,brands){
 	var brandSizeChartData ={};
@@ -16,6 +17,7 @@ function appendExistingUpdateInformation(sizeChartCSV,brands){
 	var parsedSizeChart = csvParser.parseCSVString(sizeChartCSV,true);
 		parsedBrandChart_old = getBrandSpecificSizeChartData(parsedSizeChart,brands);
 		csvParser.parseCSVInStructuredData(parsedBrandChart_old);
+		checkErrorInStructuredCSV(parsedBrandChart_old);
 		return parsedBrandChart_old;
 }
 
